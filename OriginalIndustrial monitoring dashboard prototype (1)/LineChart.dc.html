@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-2bf3dc51-5e9f-4c8d-a54d-4a4b6618fb4a/styles.css">
+<script src="_ds/nocturne-2bf3dc51-5e9f-4c8d-a54d-4a4b6618fb4a/_ds_bundle.js"></script>
+</helmet>
+<div style="position:relative;width:100%">
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:6px">
+    <sc-for list="{{ chart.legend }}" as="lg" hint-placeholder-count="2">
+      <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#4a4740;letter-spacing:.02em">
+        <svg width="14" height="6" style="display:block"><line x1="0" y1="3" x2="14" y2="3" stroke="{{ lg.color }}" stroke-width="2" stroke-dasharray="{{ lg.dash }}"></line></svg>
+        {{ lg.label }}
+      </span>
+    </sc-for>
+  </div>
+  <div onMouseMove="{{ onMove }}" onMouseLeave="{{ onLeave }}" style="position:relative;width:100%;cursor:crosshair">
+    <svg viewBox="{{ chart.vb }}" width="100%" preserveAspectRatio="none" style="display:block;height:100%;min-height:120px">
+      <sc-for list="{{ chart.bands }}" as="b" hint-placeholder-count="0">
+        <rect x="{{ b.x }}" y="{{ b.y }}" width="{{ b.w }}" height="{{ b.h }}" fill="{{ b.fill }}"></rect>
+      </sc-for>
+      <sc-for list="{{ chart.grid }}" as="g" hint-placeholder-count="5">
+        <line x1="{{ g.x1 }}" y1="{{ g.y }}" x2="{{ g.x2 }}" y2="{{ g.y }}" stroke="#d8d2c6" stroke-width="1"></line>
+      </sc-for>
+      <sc-for list="{{ chart.targets }}" as="t" hint-placeholder-count="0">
+        <line x1="{{ t.x1 }}" y1="{{ t.y }}" x2="{{ t.x2 }}" y2="{{ t.y }}" stroke="{{ t.color }}" stroke-width="1.5" stroke-dasharray="6 5" opacity="0.85"></line>
+      </sc-for>
+      <sc-for list="{{ chart.series }}" as="s" hint-placeholder-count="1">
+        <g>
+          <path d="{{ s.area }}" fill="{{ s.fill }}" stroke="none"></path>
+          <path d="{{ s.d }}" fill="none" stroke="{{ s.color }}" stroke-width="{{ s.width }}" stroke-dasharray="{{ s.dash }}" stroke-linejoin="round" stroke-linecap="round"></path>
+        </g>
+      </sc-for>
+      <sc-for list="{{ chart.markers }}" as="m" hint-placeholder-count="0">
+        <g>
+          <circle cx="{{ m.cx }}" cy="{{ m.cy }}" r="9" fill="{{ m.color }}" opacity="0.18"></circle>
+          <circle cx="{{ m.cx }}" cy="{{ m.cy }}" r="3.4" fill="{{ m.color }}"></circle>
+        </g>
+      </sc-for>
+      <sc-if value="{{ cursor.on }}" hint-placeholder-val="{{ false }}">
+        <line x1="{{ cursor.x }}" y1="8" x2="{{ cursor.x }}" y2="{{ chart.baseY }}" stroke="#2e2c27" stroke-width="1" stroke-dasharray="3 3"></line>
+      </sc-if>
+    </svg>
+    <sc-for list="{{ gridLabels }}" as="g" hint-placeholder-count="5">
+      <div style="{{ g.style }}">{{ g.label }}</div>
+    </sc-for>
+    <sc-for list="{{ xLabels }}" as="x" hint-placeholder-count="6">
+      <div style="{{ x.style }}">{{ x.label }}</div>
+    </sc-for>
+    <sc-if value="{{ cursor.on }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ tip.style }}">
+        <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#5c584f;margin-bottom:4px">{{ tip.label }}</div>
+        <sc-for list="{{ tip.rows }}" as="r" hint-placeholder-count="1">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap;line-height:1.5">
+            <span style="{{ r.dot }}"></span>
+            <span style="color:#4a4740">{{ r.label }}</span>
+            <span style="color:#1b1a17;margin-left:auto;font-variant-numeric:tabular-nums">{{ r.val }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:700,&quot;height&quot;:300},&quot;chart&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;object&quot;}}">
+class Component extends DCLogic {
+  state = { i: -1 };
+  renderVals() {
+    const c = this.props.chart || { vb: '0 0 1000 260', h: 260 };
+    const h = c.hover || { n: 0, labels: [], rows: [] };
+    const i = this.state.i;
+    const on = i >= 0 && h.n > 1 && !!this.props.chart;
+    const px = on ? (h.X0 + (h.X1 - h.X0) * (i / (h.n - 1))) : 0;
+    const pct = (px / (c.w || 1000)) * 100;
+    const flip = pct > 58;
+    const lab = { position: 'absolute', fontSize: '10px', color: '#5c584f', whiteSpace: 'nowrap', pointerEvents: 'none', lineHeight: 1 };
+    const W = c.w || 1000, H = c.h || 260;
+    return {
+      gridLabels: (c.grid || []).map(g => ({
+        label: g.label,
+        style: Object.assign({}, lab, { left: ((c.labelX || 0) / W) * 100 + '%', top: (g.y / H) * 100 + '%', transform: 'translate(-100%,-50%)' })
+      })),
+      xLabels: (c.xticks || []).map(x => ({
+        label: x.label,
+        style: Object.assign({}, lab, { left: (x.x / W) * 100 + '%', top: (x.y / H) * 100 + '%', transform: 'translate(-50%,-30%)' })
+      })),
+      chart: c,
+      cursor: { on, x: px.toFixed(1) },
+      tip: {
+        style: {
+          position: 'absolute', top: '6px', left: pct.toFixed(2) + '%',
+          transform: flip ? 'translateX(calc(-100% - 10px))' : 'translateX(10px)',
+          background: '#fbf9f5', border: '1px solid #c2bbab', borderRadius: '8px',
+          padding: '7px 9px', pointerEvents: 'none', minWidth: '150px',
+          boxShadow: '0 8px 22px rgba(0,0,0,.55)', zIndex: 6
+        },
+        label: on ? (h.labels[i] || '') : '',
+        rows: on ? h.rows.map(r => ({
+          label: r.label, val: r.vals[i],
+          dot: { width: '7px', height: '7px', borderRadius: '2px', background: r.color, flex: '0 0 auto' }
+        })) : []
+      },
+      onMove: (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        if (!r.width || h.n < 2) return;
+        const rel = ((e.clientX - r.left) / r.width) * (c.w || 1000);
+        let idx = Math.round(((rel - h.X0) / ((h.X1 - h.X0) || 1)) * (h.n - 1));
+        idx = Math.max(0, Math.min(h.n - 1, idx));
+        if (idx !== this.state.i) this.setState({ i: idx });
+      },
+      onLeave: () => { if (this.state.i !== -1) this.setState({ i: -1 }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

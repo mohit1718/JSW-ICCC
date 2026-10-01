@@ -1,0 +1,220 @@
+{
+  "dataset": "JSW Steel ICCC — simulated Blast Furnace historian",
+  "generated_for": "Factory360 ICCC prototype (fictional but plausible values)",
+  "window": {
+    "from": "2026-06-11T05:12:18.000Z",
+    "to": "2026-09-09T05:12:18.000Z",
+    "days": 90,
+    "timezone": "Asia/Kolkata (+05:30)"
+  },
+  "parameters": [
+    {
+      "id": "production",
+      "label": "Production",
+      "unit": "TPD",
+      "decimals": 0
+    },
+    {
+      "id": "hmRate",
+      "label": "HM Rate",
+      "unit": "t/hr",
+      "decimals": 1
+    },
+    {
+      "id": "cokeRate",
+      "label": "Coke Rate",
+      "unit": "kg/tHM",
+      "decimals": 1
+    },
+    {
+      "id": "coalRate",
+      "label": "Coal Rate",
+      "unit": "kg/tHM",
+      "decimals": 1
+    },
+    {
+      "id": "fuelRate",
+      "label": "Fuel Rate",
+      "unit": "kg/tHM",
+      "decimals": 1
+    },
+    {
+      "id": "rtv",
+      "label": "RTV / TRT",
+      "unit": "MW",
+      "decimals": 1
+    },
+    {
+      "id": "topPressure",
+      "label": "Top Pressure",
+      "unit": "bar",
+      "decimals": 2
+    },
+    {
+      "id": "topGasTemp",
+      "label": "Top Gas Temp",
+      "unit": "°C",
+      "decimals": 0
+    },
+    {
+      "id": "o2",
+      "label": "Oxygen Enrichment",
+      "unit": "%",
+      "decimals": 2
+    },
+    {
+      "id": "slagRate",
+      "label": "Slag Rate",
+      "unit": "kg/tHM",
+      "decimals": 0
+    },
+    {
+      "id": "bfGas",
+      "label": "BF Gas Generation",
+      "unit": "kNm³/hr",
+      "decimals": 0
+    }
+  ],
+  "furnaces": [
+    {
+      "id": "BF1",
+      "rated_capacity_tpd": 3200,
+      "health": "healthy",
+      "active_alarms": 3,
+      "frequencies": [
+        "event",
+        "daily",
+        "hourly"
+      ],
+      "finest_resolution": "Hourly",
+      "targets": {
+        "production": 3200,
+        "hmRate": 133.3,
+        "cokeRate": 345,
+        "coalRate": 170,
+        "fuelRate": 515,
+        "rtv": 15,
+        "topPressure": 2.4,
+        "topGasTemp": 175,
+        "o2": 4.8,
+        "slagRate": 285,
+        "bfGas": 210
+      }
+    },
+    {
+      "id": "BF2",
+      "rated_capacity_tpd": 2800,
+      "health": "warning",
+      "active_alarms": 7,
+      "frequencies": [
+        "event",
+        "daily",
+        "hourly"
+      ],
+      "finest_resolution": "Hourly",
+      "targets": {
+        "production": 2800,
+        "hmRate": 116.7,
+        "cokeRate": 350,
+        "coalRate": 168,
+        "fuelRate": 518,
+        "rtv": 13.5,
+        "topPressure": 2.3,
+        "topGasTemp": 180,
+        "o2": 4.5,
+        "slagRate": 290,
+        "bfGas": 195
+      }
+    },
+    {
+      "id": "BF3",
+      "rated_capacity_tpd": 1950,
+      "health": "healthy",
+      "active_alarms": 2,
+      "frequencies": [
+        "event"
+      ],
+      "finest_resolution": "Event",
+      "targets": {
+        "production": 1950,
+        "hmRate": 81.3,
+        "cokeRate": 358,
+        "coalRate": 158,
+        "fuelRate": 516,
+        "rtv": 10,
+        "topPressure": 2,
+        "topGasTemp": 188,
+        "o2": 4,
+        "slagRate": 300,
+        "bfGas": 138
+      }
+    },
+    {
+      "id": "BF4",
+      "rated_capacity_tpd": 2100,
+      "health": "critical",
+      "active_alarms": 11,
+      "frequencies": [
+        "event"
+      ],
+      "finest_resolution": "Event",
+      "targets": {
+        "production": 2100,
+        "hmRate": 87.5,
+        "cokeRate": 360,
+        "coalRate": 155,
+        "fuelRate": 515,
+        "rtv": 10.4,
+        "topPressure": 2.05,
+        "topGasTemp": 190,
+        "o2": 3.9,
+        "slagRate": 305,
+        "bfGas": 145
+      }
+    },
+    {
+      "id": "BF5",
+      "rated_capacity_tpd": 4200,
+      "health": "healthy",
+      "active_alarms": 4,
+      "frequencies": [
+        "event",
+        "daily",
+        "5-minute"
+      ],
+      "finest_resolution": "5-Minute",
+      "targets": {
+        "production": 4200,
+        "hmRate": 175,
+        "cokeRate": 345,
+        "coalRate": 175,
+        "fuelRate": 520,
+        "rtv": 18,
+        "topPressure": 2.5,
+        "topGasTemp": 175,
+        "o2": 5,
+        "slagRate": 280,
+        "bfGas": 255
+      }
+    }
+  ],
+  "files": {
+    "daily": "data/iccc-daily.json",
+    "hourly": [
+      "data/iccc-hourly-BF1.json",
+      "data/iccc-hourly-BF2.json"
+    ],
+    "fiveMinute": [
+      "data/iccc-5min-BF5.json"
+    ],
+    "event": "data/iccc-event-readings.json",
+    "eventsLog": "data/iccc-events.json",
+    "utilities": "data/iccc-utilities.json"
+  },
+  "notes": [
+    "BF1 and BF2 carry event + daily + hourly data.",
+    "BF3 and BF4 carry event data only — no hourly or daily historian tags.",
+    "BF5 carries event + daily + 5-minute data.",
+    "Series are stored columnar: t0_iso + step_seconds + count define the timestamps."
+  ]
+}
